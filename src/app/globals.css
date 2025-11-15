@@ -1,0 +1,156 @@
+@import "tailwindcss";
+
+:root {
+  /* 品牌主色调 - Primary (智慧蓝 #4B6CB7) - 用于重要按钮、导航 */
+  --primary: 220 43% 51%; /* #4B6CB7 */
+  --primary-foreground: 0 0% 100%;
+  
+  /* 品牌辅色 - Secondary (活力黄 #FFD166) - 用于提醒、行动号召 */
+  --secondary: 43 100% 70%; /* #FFD166 */
+  --secondary-foreground: 0 0% 9%;
+  
+  /* 品牌点缀色 - Accent (成功绿 #06D6A0) - 用于完成状态、积极反馈 */
+  --accent: 165 95% 43%; /* #06D6A0 */
+  --accent-foreground: 0 0% 100%;
+  
+  /* 背景和前景 */
+  --background: 0 0% 100%;
+  --foreground: 0 0% 9%;
+  
+  /* 卡片 */
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 9%;
+  
+  /* 弹出框 */
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 9%;
+  
+  /* 警告/提示 */
+  --muted: 0 0% 96.1%;
+  --muted-foreground: 0 0% 45.1%;
+  
+  /* 破坏性操作 */
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  
+  /* 边框 */
+  --border: 0 0% 89.8%;
+  --input: 0 0% 89.8%;
+  --ring: 220 43% 51%; /* 使用主色调作为焦点环 */
+  
+  /* 半径 */
+  --radius: 0.5rem;
+}
+
+@theme inline {
+  /* 品牌主色调色阶 - Primary Color Scale (智慧蓝) */
+  --color-primary-50: #EFF2F9;
+  --color-primary-100: #D9E0F0;
+  --color-primary-200: #B8C7E3;
+  --color-primary-300: #8FA5D2;
+  --color-primary-400: #6B84C0;
+  --color-primary-500: #4B6CB7; /* 品牌主色 - 智慧蓝 */
+  --color-primary-600: #3A5AA5;
+  --color-primary-700: #304A8A;
+  --color-primary-800: #2C3F72;
+  --color-primary-900: #29385F;
+  --color-primary-950: #1A2438;
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  
+  /* 品牌辅色色阶 - Secondary Color Scale (活力黄) */
+  --color-secondary-50: #FFFBF0;
+  --color-secondary-100: #FFF5D9;
+  --color-secondary-200: #FFE8B3;
+  --color-secondary-300: #FFD880;
+  --color-secondary-400: #FFD166; /* 品牌辅色 - 活力黄 */
+  --color-secondary-500: #FFC233;
+  --color-secondary-600: #FFA500;
+  --color-secondary-700: #E68900;
+  --color-secondary-800: #CC7700;
+  --color-secondary-900: #A66300;
+  --color-secondary-950: #7A4A00;
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  
+  /* 品牌点缀色色阶 - Accent Color Scale (成功绿) */
+  --color-accent-50: #E6FDF7;
+  --color-accent-100: #B3FAE8;
+  --color-accent-200: #80F7D9;
+  --color-accent-300: #4DF4CA;
+  --color-accent-400: #1AF1BB;
+  --color-accent-500: #06D6A0; /* 品牌点缀色 - 成功绿 */
+  --color-accent-600: #05B886;
+  --color-accent-700: #049A6C;
+  --color-accent-800: #037C52;
+  --color-accent-900: #025E38;
+  --color-accent-950: #01401E;
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  
+  /* Shadcn UI 主题变量 */
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  
+  /* 字体 */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* 品牌主色调 - Primary (暗色模式) - 智慧蓝 */
+    --primary: 220 43% 51%; /* #4B6CB7 */
+    --primary-foreground: 0 0% 100%;
+    
+    /* 品牌辅色 - Secondary (暗色模式) - 活力黄 */
+    --secondary: 43 100% 70%; /* #FFD166 */
+    --secondary-foreground: 0 0% 9%;
+    
+    /* 品牌点缀色 - Accent (暗色模式) - 成功绿 */
+    --accent: 165 95% 43%; /* #06D6A0 */
+    --accent-foreground: 0 0% 100%;
+    
+    /* 背景和前景 */
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    
+    /* 卡片 */
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    
+    /* 弹出框 */
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    
+    /* 警告/提示 */
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    
+    /* 破坏性操作 */
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    
+    /* 边框 */
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 220 43% 51%; /* 使用主色调作为焦点环 */
+  }
+}
+
+body {
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
