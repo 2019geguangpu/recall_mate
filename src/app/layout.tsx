@@ -1,6 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { brand } from "@/lib/brand";
+import { TRPCProvider } from "@/lib/trpc/provider";
+import { Toaster } from "@/components/ui/sonner";
+import { NotificationProvider } from "@/components/notifications/notification-provider";
+import { InstallPrompt } from "@/components/pwa/install-prompt";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -20,10 +24,11 @@ export const metadata: Metadata = {
   },
   description: brand.slogan,
   manifest: "/site.webmanifest",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: brand.colors.primary[500] },
-    { media: "(prefers-color-scheme: dark)", color: brand.colors.primary[500] },
-  ],
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: brand.name,
+  },
   icons: {
     icon: [
       { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
@@ -36,6 +41,18 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: brand.colors.primary[500] },
+    { media: "(prefers-color-scheme: dark)", color: brand.colors.primary[500] },
+  ],
+  viewportFit: "cover", // 支持 iPhone X 等设备的刘海屏
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -46,7 +63,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <TRPCProvider>
+          <NotificationProvider>
+            {children}
+            <InstallPrompt />
+          </NotificationProvider>
+        </TRPCProvider>
+        <Toaster />
       </body>
     </html>
   );

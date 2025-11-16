@@ -1,0 +1,104 @@
+// Prisma Schema
+// 数据库模型定义
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// 任务表
+model Task {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  type        String   @default("task") // task, reminder, event, note
+  status      String   @default("pending") // pending, completed, cancelled
+  priority    String   @default("medium") // low, medium, high, urgent
+  
+  // 时间相关
+  scheduledAt DateTime?
+  dueDate     DateTime?
+  
+  // 重复模式（JSON 存储）
+  repeatPattern Json?
+  
+  // 智能提醒（JSON 存储）
+  smartTiming Json?
+  
+  // 关联信息
+  tags        Json? // 标签数组（JSON 存储）
+  category    String?
+  
+  // 关联的语音记录
+  voiceRecordId String?
+  voiceRecord   VoiceRecord? @relation(fields: [voiceRecordId], references: [id])
+  
+  // 元数据
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  completedAt DateTime?
+  
+  @@index([status])
+  @@index([scheduledAt])
+  @@index([createdAt])
+  @@index([voiceRecordId])
+  @@map("tasks")
+}
+
+// 语音记录表
+model VoiceRecord {
+  id          String   @id @default(cuid())
+  type        String   @default("note") // reminder, note, task, event, thought
+  status      String   @default("completed") // recording, processing, completed, failed
+  
+  // 音频相关
+  audioUrl    String?
+  duration    Int      @default(0) // 秒
+  
+  // 转录结果
+  transcript  String?
+  confidence  Float?
+  
+  // 智能解析结果（JSON 存储）
+  extractedInfo Json?
+  
+  // 元数据
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // 关联的任务
+  tasks       Task[]
+  
+  @@index([createdAt])
+  @@index([status])
+  @@map("voice_records")
+}
+
+// 用户画像表
+model UserProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique // 用户ID，可以是邮箱或其他唯一标识
+  
+  // 画像数据（JSON 存储）
+  sleepPattern       Json?
+  workPattern        Json?
+  healthNeeds        Json?
+  behaviorPattern    Json?
+  memoryCharacteristics Json?
+  consumptionPreferences Json?
+  habitAnalysis      Json?
+  personalityTags    Json?
+  
+  // 元数据
+  profileCompleteness Int      @default(0) // 0-100
+  lastAnalysisDate    DateTime?
+  createdAt           DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  
+  @@map("user_profiles")
+}
+

@@ -12,26 +12,41 @@
 
 # testing
 /coverage
+.nyc_output
 
 # next.js
 /.next/
 /out/
+/build
+/dist
 
 # production
-/build
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
 # misc
 .DS_Store
 *.pem
+*.swp
+*.swo
+*~
 
 # debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
+.vscode/
+.idea/
+*.code-workspace
 
 # env files (can opt-in for committing if needed)
-.env*
+.env
+.env*.local
+.env.development
+.env.test
+.env.production
+.env.production.local
 
 # vercel
 .vercel
@@ -39,3 +54,42 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# prisma
+# 注意：prisma/migrations 应该提交，但生成的客户端不需要
+# prisma/migrations 目录应该保留在 git 中
+
+# docker
+# Docker 相关文件通常应该提交，但如果不想提交可以取消注释
+# docker-compose.override.yml
+# .docker/
+
+# database
+*.db
+*.sqlite
+*.sqlite3
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# PWA / Service Worker
+# Service Worker 文件应该提交，但构建缓存不需要
+.sw-cache/
+workbox-*.js

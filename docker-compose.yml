@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # Next.js 应用
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=mysql://recall_mate:recall_mate_password@db:3306/recall_mate
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - recall_mate_network
+
+  # MySQL 数据库
+  db:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=recall_mate
+      - MYSQL_USER=recall_mate
+      - MYSQL_PASSWORD=recall_mate_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - recall_mate_network
+
+volumes:
+  mysql_data:
+
+networks:
+  recall_mate_network:
+    driver: bridge
+
