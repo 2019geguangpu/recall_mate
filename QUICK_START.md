@@ -10,9 +10,9 @@
 脚本会自动：
 1. 检查 Docker 环境
 2. 创建 `.env` 文件（如果不存在）
-3. 构建 Docker 镜像
-4. 启动所有服务
-5. 运行数据库迁移
+3. 验证环境变量配置
+4. 构建 Docker 镜像
+5. 启动所有服务（数据库迁移会自动运行）
 
 ## 📝 手动部署步骤
 
@@ -36,11 +36,8 @@ EOF
 # 构建镜像
 docker-compose build
 
-# 启动服务
-docker-compose up -d
-
-# 运行数据库迁移
-docker-compose exec app pnpm prisma migrate deploy
+# 启动服务（数据库迁移会自动运行）
+docker-compose up -d --build
 ```
 
 ### 3. 访问应用

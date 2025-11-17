@@ -72,9 +72,20 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # 复制 Prisma 相关文件
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 
+# 安装 Prisma CLI（用于运行迁移）
+# 注意：standalone 输出已经包含了 Prisma Client，但需要 CLI 来运行迁移
+RUN corepack enable && corepack prepare pnpm@latest --activate
+# 使用 npm 全局安装 Prisma CLI（更简单，不依赖 pnpm-lock.yaml）
+RUN npm install -g prisma@^6.19.0
+
+# 复制启动脚本
+COPY --chown=nextjs:nodejs start.sh ./start.sh
+RUN chmod +x ./start.sh
+
 # 设置正确的权限
 RUN chown -R nextjs:nodejs /app
 
+# 切换到非 root 用户
 USER nextjs
 
 EXPOSE 3000
@@ -82,6 +93,6 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# 启动应用
-CMD ["node", "server.js"]
+# 使用启动脚本（会自动运行迁移）
+CMD ["./start.sh"]
 

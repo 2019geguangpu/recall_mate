@@ -107,12 +107,11 @@ pnpm dev
 ### 快速部署
 
 ```bash
-# 使用部署脚本（推荐）
+# 使用部署脚本（推荐，包含环境检查和错误提示）
 ./deploy.sh
 
-# 或手动部署
+# 或手动部署（迁移会自动运行）
 docker-compose up -d --build
-docker-compose exec app pnpm prisma migrate deploy
 ```
 
 详细部署说明请查看 [DEPLOYMENT.md](./DEPLOYMENT.md)

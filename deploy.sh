@@ -64,14 +64,14 @@ docker-compose up -d
 echo "⏳ 等待数据库就绪..."
 sleep 10
 
-# 运行数据库迁移
-echo "📊 运行数据库迁移..."
-docker-compose exec -T app pnpm prisma migrate deploy || {
-    echo "⚠️  迁移失败，尝试初始化数据库..."
-    docker-compose exec -T app pnpm prisma migrate dev --name init || true
-}
+# 注意：数据库迁移现在会在容器启动时自动运行（通过 start.sh）
+# 如果需要手动运行迁移，可以使用：
+# docker-compose exec app prisma migrate deploy
 
 echo "✅ 部署完成！"
+echo ""
+echo "📝 提示：数据库迁移会在容器启动时自动运行"
+echo "📝 查看迁移日志：docker-compose logs app | grep -i migrate"
 echo ""
 echo "📱 应用地址: http://localhost:3000"
 echo "📊 查看日志: docker-compose logs -f"

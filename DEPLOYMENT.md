@@ -40,14 +40,19 @@ docker-compose down
 docker-compose down -v
 ```
 
-#### 3. 运行数据库迁移
+#### 3. 数据库迁移
+
+**自动迁移（推荐）**：
+容器启动时会自动运行数据库迁移，无需手动操作。
+
+**手动迁移（如果需要）**：
 
 ```bash
 # 进入应用容器
 docker-compose exec app sh
 
 # 运行 Prisma 迁移
-pnpm prisma migrate deploy
+prisma migrate deploy
 
 # 退出容器
 exit
@@ -56,7 +61,7 @@ exit
 或者一行命令：
 
 ```bash
-docker-compose exec app pnpm prisma migrate deploy
+docker-compose exec app prisma migrate deploy
 ```
 
 #### 4. 访问应用
@@ -199,6 +204,8 @@ curl http://localhost:3000/health  # 如果有健康检查端点
 
 ## 🔄 更新应用
 
+### 常规更新（无数据库变更）
+
 ```bash
 # 1. 拉取最新代码
 git pull
@@ -209,12 +216,71 @@ docker-compose build
 # 3. 停止旧容器
 docker-compose down
 
+# 4. 启动新容器（会自动运行数据库迁移）
+docker-compose up -d
+```
+
+### 更新数据库 Schema
+
+当你修改了 `prisma/schema.prisma` 后，需要按以下步骤操作：
+
+#### 1. 本地开发环境
+
+```bash
+# 创建迁移文件
+pnpm prisma migrate dev --name your_migration_name
+
+# 这会：
+# - 创建迁移文件在 prisma/migrations/ 目录
+# - 应用到本地开发数据库
+# - 重新生成 Prisma Client
+```
+
+#### 2. 提交到 Git
+
+```bash
+# 提交 schema 和迁移文件
+git add prisma/schema.prisma prisma/migrations/
+git commit -m "更新数据库 schema"
+git push
+```
+
+#### 3. 部署到生产环境
+
+```bash
+# 1. 拉取最新代码（包含新的迁移文件）
+git pull
+
+# 2. 重新构建镜像
+docker-compose build
+
+# 3. 停止旧容器
+docker-compose down
+
 # 4. 启动新容器
+# 注意：容器启动时会自动运行 prisma migrate deploy
+# 这会应用所有未应用的迁移
 docker-compose up -d
 
-# 5. 运行数据库迁移（如果有）
-docker-compose exec app pnpm prisma migrate deploy
+# 5. 查看日志确认迁移成功
+docker-compose logs app | grep -i migrate
 ```
+
+#### 4. 验证迁移
+
+```bash
+# 检查迁移状态
+docker-compose exec app prisma migrate status
+
+# 或者手动运行迁移（如果需要）
+docker-compose exec app prisma migrate deploy
+```
+
+**重要提示**：
+- ✅ **Dockerfile 已配置自动迁移**：容器启动时会自动运行 `prisma migrate deploy`
+- ✅ 迁移文件必须包含在 Docker 镜像中（已通过 `COPY prisma` 实现）
+- ⚠️ 确保生产环境的 `DATABASE_URL` 配置正确
+- ⚠️ 在生产环境运行迁移前，建议先备份数据库
 
 ## 🚀 云平台部署
 
