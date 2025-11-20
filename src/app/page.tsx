@@ -7,6 +7,10 @@ import { InputSwitcher } from "@/components/input-switcher/input-switcher";
 import { ProfileCard } from "@/components/user-profile/profile-card";
 import { Button } from "@/components/ui/button";
 import { notificationService } from "@/lib/notifications/notification-service";
+import { defaultUserProfile, UserProfile } from "@/lib/types/user-profile";
+import { VoiceRecord } from "@/lib/types/voice-record";
+import { trpc } from "@/lib/trpc/client";
+import { containsTimeKeywords } from "@/lib/time-detection";
 
 type InputMode = "voice" | "text";
 
