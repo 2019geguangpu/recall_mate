@@ -22,7 +22,7 @@
 
 ```bash
 cat > .env << EOF
-DATABASE_URL="mysql://recall_mate:recall_mate_password@db:3306/recall_mate"
+DATABASE_URL="postgresql://recall_mate:recall_mate_password@db:5432/recall_mate"
 DEEPSEEK_API_KEY="your_deepseek_api_key_here"
 NODE_ENV="production"
 EOF
@@ -63,14 +63,14 @@ docker-compose ps
 docker-compose exec app sh
 
 # 进入数据库容器
-docker-compose exec db mysql -u recall_mate -precall_mate_password recall_mate
+docker-compose exec db psql -U recall_mate -d recall_mate
 ```
 
 ## ⚠️ 注意事项
 
 1. **首次部署**：需要运行数据库迁移
 2. **环境变量**：确保 `DEEPSEEK_API_KEY` 已正确配置
-3. **端口占用**：确保 3000 和 3306 端口未被占用
+3. **端口占用**：确保 3000 和 5432 端口未被占用
 4. **HTTPS**：生产环境需要配置 HTTPS（PWA 要求）
 
 ## 🐛 故障排查

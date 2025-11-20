@@ -34,12 +34,12 @@
 
 ### 后端
 - **tRPC** - 类型安全的 API 框架
-- **Prisma** - ORM，连接 MySQL
+- **Prisma** - ORM，连接 PostgreSQL
 - **LangChain** - AI Agent 框架
 - **DeepSeek-R1** - 大语言模型
 
 ### 数据库
-- **MySQL** - 关系型数据库
+- **PostgreSQL** - 关系型数据库
 
 ### PWA & 通知
 - **Service Worker** - 后台运行和离线支持
@@ -52,7 +52,7 @@
 
 - Node.js 20+
 - pnpm（推荐）或 npm/yarn
-- MySQL 8.0+
+- PostgreSQL 14+
 
 ### 安装步骤
 
@@ -75,7 +75,7 @@ pnpm install
 
 ```env
 # 数据库连接
-DATABASE_URL="mysql://user:password@localhost:3306/recall_mate"
+DATABASE_URL="postgresql://user:password@localhost:5432/recall_mate"
 
 # DeepSeek API Key
 DEEPSEEK_API_KEY="your_deepseek_api_key_here"
@@ -239,7 +239,7 @@ AI Agent 解析
 
 | 变量名 | 说明 | 必需 |
 |--------|------|------|
-| `DATABASE_URL` | MySQL 数据库连接字符串 | ✅ |
+| `DATABASE_URL` | PostgreSQL 数据库连接字符串 | ✅ |
 | `DEEPSEEK_API_KEY` | DeepSeek API 密钥 | ✅ |
 | `NODE_ENV` | 环境模式（development/production） | ❌ |
 
@@ -255,7 +255,7 @@ AI Agent 解析
 ### 部署要求
 
 - ✅ HTTPS（PWA 和通知功能必需）
-- ✅ MySQL 数据库
+- ✅ PostgreSQL 数据库
 - ✅ Node.js 20+ 运行环境
 
 ## 🤝 贡献

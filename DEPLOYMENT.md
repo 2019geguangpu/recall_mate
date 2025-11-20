@@ -21,7 +21,7 @@ nano .env  # 或使用你喜欢的编辑器
 ```
 
 **必须配置的环境变量：**
-- `DATABASE_URL`: MySQL 数据库连接字符串
+- `DATABASE_URL`: PostgreSQL 数据库连接字符串
 - `DEEPSEEK_API_KEY`: DeepSeek API 密钥
 
 #### 2. 使用 Docker Compose 部署（推荐）
@@ -67,7 +67,7 @@ docker-compose exec app prisma migrate deploy
 #### 4. 访问应用
 
 - 应用地址：http://localhost:3000
-- 数据库端口：3306（仅容器内访问）
+- 数据库端口：5432（仅容器内访问）
 
 ### 单独使用 Dockerfile
 
@@ -77,11 +77,11 @@ docker-compose exec app prisma migrate deploy
 # 构建镜像
 docker build -t recall-mate:latest .
 
-# 运行容器（需要先启动 MySQL）
+# 运行容器（需要先启动 PostgreSQL）
 docker run -d \
   --name recall-mate \
   -p 3000:3000 \
-  -e DATABASE_URL="mysql://user:password@host:3306/database" \
+  -e DATABASE_URL="postgresql://user:password@host:5432/database" \
   -e DEEPSEEK_API_KEY="your_api_key" \
   recall-mate:latest
 ```
@@ -93,7 +93,7 @@ docker run -d \
 创建 `.env.production` 文件：
 
 ```bash
-DATABASE_URL=mysql://user:password@db_host:3306/recall_mate
+DATABASE_URL=postgresql://user:password@db_host:5432/recall_mate
 DEEPSEEK_API_KEY=your_production_api_key
 NODE_ENV=production
 ```
@@ -115,7 +115,7 @@ services:
 services:
   app:
     environment:
-      - DATABASE_URL=mysql://user:password@external_db_host:3306/database
+      - DATABASE_URL=postgresql://user:password@external_db_host:5432/database
     # 移除 depends_on
 ```
 
@@ -157,24 +157,24 @@ sudo certbot --nginx -d your-domain.com
 
 ```yaml
 volumes:
-  mysql_data:  # 数据会保存在这里
+  postgres_data:  # 数据会保存在这里
 ```
 
 查看 volume：
 
 ```bash
 docker volume ls
-docker volume inspect recall_mate_mysql_data
+docker volume inspect recall_mate_postgres_data
 ```
 
 ### 5. 备份数据库
 
 ```bash
 # 备份
-docker-compose exec db mysqldump -u recall_mate -precall_mate_password recall_mate > backup.sql
+docker-compose exec db pg_dump -U recall_mate recall_mate > backup.sql
 
 # 恢复
-docker-compose exec -T db mysql -u recall_mate -precall_mate_password recall_mate < backup.sql
+docker-compose exec -T db psql -U recall_mate recall_mate < backup.sql
 ```
 
 ## 📊 监控和日志
@@ -295,7 +295,7 @@ docker-compose exec app prisma migrate deploy
 ### Railway
 
 1. 连接 GitHub 仓库
-2. 添加 MySQL 服务
+2. 添加 PostgreSQL 服务
 3. 配置环境变量
 4. 自动部署
 
@@ -303,7 +303,7 @@ docker-compose exec app prisma migrate deploy
 
 1. 连接 GitHub 仓库
 2. 选择 Dockerfile
-3. 添加 MySQL 数据库
+3. 添加 PostgreSQL 数据库
 4. 配置环境变量
 
 ### AWS / GCP / Azure
@@ -337,7 +337,7 @@ docker-compose exec app env | grep -E "DATABASE_URL|DEEPSEEK_API_KEY"
 docker-compose ps db
 
 # 测试数据库连接
-docker-compose exec db mysql -u recall_mate -precall_mate_password -e "SELECT 1"
+docker-compose exec db psql -U recall_mate -d recall_mate -c "SELECT 1"
 ```
 
 ### 端口被占用
@@ -345,7 +345,7 @@ docker-compose exec db mysql -u recall_mate -precall_mate_password -e "SELECT 1"
 ```bash
 # 检查端口占用
 lsof -i :3000
-lsof -i :3306
+lsof -i :5432
 
 # 修改 docker-compose.yml 中的端口映射
 ```

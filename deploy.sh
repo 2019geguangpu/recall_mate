@@ -23,7 +23,7 @@ if [ ! -f .env ]; then
     echo "⚠️  .env 文件不存在，正在创建..."
     cat > .env << EOF
 # 数据库连接
-DATABASE_URL="mysql://recall_mate:recall_mate_password@db:3306/recall_mate"
+DATABASE_URL="postgresql://recall_mate:recall_mate_password@db:5432/recall_mate"
 
 # DeepSeek API Key
 DEEPSEEK_API_KEY="your_deepseek_api_key_here"

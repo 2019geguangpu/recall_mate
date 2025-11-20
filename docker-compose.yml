@@ -12,7 +12,7 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=mysql://recall_mate:recall_mate_password@db:3306/recall_mate
+      - DATABASE_URL=postgresql://recall_mate:recall_mate_password@db:5432/recall_mate
       - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
     depends_on:
       db:
@@ -21,20 +21,19 @@ services:
     networks:
       - recall_mate_network
 
-  # MySQL 数据库
+  # PostgreSQL 数据库
   db:
-    image: mysql:8.0
+    image: postgres:16-alpine
     environment:
-      - MYSQL_ROOT_PASSWORD=root_password
-      - MYSQL_DATABASE=recall_mate
-      - MYSQL_USER=recall_mate
-      - MYSQL_PASSWORD=recall_mate_password
+      - POSTGRES_USER=recall_mate
+      - POSTGRES_PASSWORD=recall_mate_password
+      - POSTGRES_DB=recall_mate
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password"]
+      test: ["CMD-SHELL", "pg_isready -U recall_mate"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -43,7 +42,7 @@ services:
       - recall_mate_network
 
 volumes:
-  mysql_data:
+  postgres_data:
 
 networks:
   recall_mate_network:

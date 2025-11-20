@@ -6,7 +6,7 @@
 
 ```env
 # Database
-DATABASE_URL="mysql://user:password@localhost:3306/recall_mate?schema=public"
+DATABASE_URL="postgresql://user:password@localhost:5432/recall_mate?schema=public"
 
 # DeepSeek API
 DEEPSEEK_API_KEY=your_deepseek_api_key_here
@@ -18,7 +18,7 @@ NODE_ENV=development
 
 ## 数据库设置
 
-1. 创建 MySQL 数据库：
+1. 创建 PostgreSQL 数据库：
 ```sql
 CREATE DATABASE recall_mate;
 ```
@@ -36,7 +36,7 @@ pnpm prisma studio
 ## 技术栈
 
 - **tRPC**: 类型安全的 API 框架
-- **Prisma**: ORM，连接 MySQL 数据库
+- **Prisma**: ORM，连接 PostgreSQL 数据库
 - **LangChain**: AI Agent 框架
 - **DeepSeek-R1**: 大语言模型（通过 OpenAI 兼容接口）
 
@@ -49,7 +49,7 @@ pnpm prisma studio
 3. 调用 tRPC → `ai.parseAndCreateTask`
 4. LangChain Agent 解析 → 使用 DeepSeek-R1
 5. Agent 调用工具 → `createTaskTool`
-6. 保存到数据库 → Prisma + MySQL
+6. 保存到数据库 → Prisma + PostgreSQL
 
 ### Agent 工作流程
 
@@ -66,7 +66,7 @@ LangChain Agent (DeepSeek-R1)
     ↓
 调用 createTaskTool
     ↓
-保存到 MySQL (tasks 表)
+保存到 PostgreSQL (tasks 表)
 ```
 
 ## 开发命令
