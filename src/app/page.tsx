@@ -5,10 +5,8 @@ import { toast } from "sonner";
 import { Navbar } from "@/components/layout/navbar";
 import { InputSwitcher } from "@/components/input-switcher/input-switcher";
 import { ProfileCard } from "@/components/user-profile/profile-card";
-import { defaultUserProfile, type UserProfile } from "@/lib/types/user-profile";
-import type { VoiceRecord } from "@/lib/types/voice-record";
-import { trpc } from "@/lib/trpc/client";
-import { containsTimeKeywords } from "@/lib/time-detection";
+import { Button } from "@/components/ui/button";
+import { notificationService } from "@/lib/notifications/notification-service";
 
 type InputMode = "voice" | "text";
 
@@ -16,6 +14,26 @@ export default function Home() {
   const [profile, setProfile] = useState<UserProfile>(defaultUserProfile);
   const [recentRecords, setRecentRecords] = useState<VoiceRecord[]>([]);
   const [inputMode, setInputMode] = useState<InputMode>("voice");
+
+  // 测试通知功能
+  const handleTestNotification = async () => {
+    try {
+      const permission = await notificationService.requestPermission();
+      if (permission === "granted") {
+        await notificationService.showReminderNotification(
+          "测试通知",
+          "这是一条测试通知，如果您能看到这条消息，说明通知功能正常！",
+          `test-${Date.now()}`
+        );
+        toast.success("测试通知已发送");
+      } else {
+        toast.error("通知权限被拒绝，请在浏览器设置中允许通知");
+      }
+    } catch (error) {
+      console.error("测试通知失败:", error);
+      toast.error("发送测试通知失败");
+    }
+  };
 
   // tRPC mutations
   const parseAndCreateTask = trpc.ai.parseAndCreateTask.useMutation();
@@ -112,6 +130,17 @@ export default function Home() {
             <span className="text-sm font-medium text-muted-foreground">
               画像完整度: {profile.profileCompleteness}%
             </span>
+          </div>
+          
+          <div className="mt-6 flex justify-center">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleTestNotification}
+              className="gap-2"
+            >
+              🔔 测试通知功能
+            </Button>
           </div>
         </div>
 

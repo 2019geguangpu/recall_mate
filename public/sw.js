@@ -95,13 +95,17 @@ self.addEventListener('notificationclick', (event) => {
   
   event.notification.close();
 
+  if (event.action === 'close') {
+    return;
+  }
+
   const urlToOpen = event.notification.data?.url || '/reminders';
 
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
       // 如果已经有打开的窗口，聚焦它
       for (const client of clientList) {
-        if (client.url === urlToOpen && 'focus' in client) {
+        if (client.url.includes(urlToOpen) && 'focus' in client) {
           return client.focus();
         }
       }
@@ -268,20 +272,34 @@ async function checkReminders() {
           const isMacOS = /Mac|iPhone|iPad|iPod/.test(navigator.userAgent || '');
           
           // 尝试发送通知，如果权限未授予会抛出错误
-          await self.registration.showNotification(`⏰ ${reminder.title}`, {
+          // 注意：Android Chrome 对 icon 和 badge 的要求比较严格
+          const notificationOptions = {
             body: reminder.description || '提醒时间到了！',
             icon: '/android-chrome-192x192.png',
-            badge: '/favicon-32x32.png',
+            badge: '/favicon-32x32.png', // Android 状态栏小图标
             tag: `reminder-${reminderId}`,
+            renotify: true, // 如果已有相同 tag 的通知，重新通知（震动/声音）
             requireInteraction: !isMacOS, // macOS 上不使用持久通知
-            silent: false, // 标准通知（有声音）
-            vibrate: isMacOS ? undefined : [200, 100, 200], // macOS 不支持震动
+            // silent: false, // 不要显式设置 silent: false，某些浏览器可能不兼容
+            vibrate: isMacOS ? undefined : [200, 100, 200, 100, 200, 100, 200], // 更长的震动模式
             data: {
               type: 'reminder',
               reminderId: reminderId,
               url: '/reminders',
             },
-          });
+            actions: [
+              {
+                action: 'open',
+                title: '查看详情'
+              },
+              {
+                action: 'close',
+                title: '关闭'
+              }
+            ]
+          };
+
+          await self.registration.showNotification(`⏰ ${reminder.title}`, notificationOptions);
           
           // 标记为已通知
           notifiedReminders.set(reminderId, now);

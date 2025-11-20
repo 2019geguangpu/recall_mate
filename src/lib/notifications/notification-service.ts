@@ -106,8 +106,9 @@ class NotificationService {
         badge: options.badge || "/favicon-32x32.png",
         tag: options.tag,
         requireInteraction: options.requireInteraction || false,
-        silent: options.silent || false,
+        // silent: options.silent || false, // 移除
         data: options.data,
+        renotify: true, // 确保重复通知会震动
       };
 
       // 添加震动（如果支持）
@@ -151,8 +152,10 @@ class NotificationService {
         badge: options.badge || "/favicon-32x32.png",
         tag: options.tag,
         requireInteraction: options.requireInteraction || false,
-        silent: options.silent || false,
+        // silent: options.silent || false, // 移除
         data: options.data,
+        // @ts-ignore - renotify is part of the spec but missing in some types
+        renotify: true,
       };
 
       // 移动端支持震动
@@ -210,8 +213,8 @@ class NotificationService {
       body: description || "提醒时间到了！",
       tag: reminderId || `reminder-${Date.now()}`,
       requireInteraction: !isMac, // macOS 上不使用持久通知
-      silent: false, // 标准通知（有声音）
-      vibrate: isMac ? undefined : [200, 100, 200], // macOS 不支持震动，移动端支持
+      // silent: false, // 移除显式设置，使用默认值
+      vibrate: isMac ? undefined : [200, 100, 200, 100, 200, 100, 200], // 更明显的震动
       data: {
         type: "reminder",
         reminderId,
